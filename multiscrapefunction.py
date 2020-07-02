@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 def multiscrape(username):
 
-    def myscrape(site, size, name):
+    def myscrape(site, size):
 
         # here is the form data
         data = {
@@ -14,7 +14,7 @@ def multiscrape(username):
         # Get the page
         # use .post
         # send the data
-        url = site
+        url = "https://www.puzzle-"+site+".com/hall.php"
         response = requests.post(url, data=data)
         doc = BeautifulSoup(response.text, 'html.parser')
 
@@ -26,36 +26,23 @@ def multiscrape(username):
         userdata = content.find_all("th")
         alltime = userdata[0]
 
-        # now I am going to turn it into a string, so that I can cut off the <th> tags!
-        answer = str(alltime)
-        print(name,"",answer[4:-5])
+        # scrape the name of the puzzle
+        puzzle = content.find(class_="on")
 
-    # yes, I could probably find a way to use a function to generate all these too
-    myscrape("https://www.puzzle-nonograms.com/hall.php", 0, "5x5 nonograms")
-    myscrape("https://www.puzzle-nonograms.com/hall.php", 1, "10x10 nonograms")
-    myscrape("https://www.puzzle-nonograms.com/hall.php", 2, "15x15 nonograms")
-    myscrape("https://www.puzzle-nonograms.com/hall.php", 3, "20x20 nonograms")
-    myscrape("https://www.puzzle-nonograms.com/hall.php", 4, "25x25 nonograms")
-    print("\n")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 0, "5x5 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 1, "5x5 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 2, "7x7 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 3, "7x7 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 4, "7x7 hard shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 5, "10x10 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 6, "10x10 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 7, "10x10 hard shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 8, "15x15 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 9, "15x15 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 10, "15x15 hard shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 11, "20x20 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 12, "20x20 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 13, "20x20 hard shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 14, "25x25 easy shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 15, "25x25 normal shingoki")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 16, "25x25 hard shingoki")
+        #and output!
+        print(puzzle.string, alltime.string)
 
+    # yes, I could probably still find a way to use a function to generate all these too
+    myscrape("nonograms", 0)
+    myscrape("nonograms", 1)
+    myscrape("nonograms", 2)
+    myscrape("nonograms", 3)
+    myscrape("nonograms", 4)
     print("\n")
-    myscrape("https://www.puzzle-shingoki.com/hall.php", 0, "5x5 easy shingoki")
+    myscrape("shingoki", 0)
+    myscrape("shingoki", 1)
+    myscrape("shingoki", 2)
+    myscrape("shingoki", 3)
+    myscrape("shingoki", 4)
 
 multiscrape ("russellan")
