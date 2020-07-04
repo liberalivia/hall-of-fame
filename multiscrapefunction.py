@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 def multiscrape(username):
 
@@ -35,12 +36,26 @@ def multiscrape(username):
             # it is in a table, which I am sure there are easy ways to parse, but I do know that it is always inside the first <th> tag
             userdata = doc.find_all("th")
             alltime = userdata[0]
+            alltime1 = alltime.string
+
+            # it lists your position and your time in the same string, so we need to split those up
+            # but if you have no highscore it returns "n/a", so first we need to check for that
+            if " " in alltime1:
+                position, time = alltime1.split(" ", 1)
+                #time has unhelpful brackets around it
+                timenb = time[1:-1]
+            else:
+                position = ""
+                timenb = ""
 
             # scrape the name of the puzzle
             puzzle = doc.find(class_="on")
 
-            #and output!
-            print(puzzle.string,"   ", alltime.string)
+            #and output! This time to a csv. "a" parameter lets me add to the file even though we're doing this over and over again
+            with open("highscores.csv", "a") as highscores:
+                highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
+
+                highscores_writer.writerow([puzzle.string, position, timenb])
 
         #run the scrape as many times as there are puzzles on that site
         for i in range(number0):
@@ -50,8 +65,7 @@ def multiscrape(username):
     numberscrape("shingoki")
     numberscrape("masyu")
     numberscrape("stitches")
-    print("aquarium")
-    #this is the site's problem not mine
+    #annoyingly the site does not name the Aquarium puzzles
     numberscrape("aquarium")
     numberscrape("tapa")
     numberscrape("star-battle")
