@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+import time
 
 def multiscrape(username):
 
@@ -40,10 +41,11 @@ def multiscrape(username):
 
             # it lists your position and your time in the same string, so we need to split those up
             # but if you have no highscore it returns "n/a", so first we need to check for that
+            # also I had an object called time which was going to cause problems later
             if " " in alltime1:
-                position, time = alltime1.split(" ", 1)
-                #time has unhelpful brackets around it
-                timenb = time[1:-1]
+                position, ttime = alltime1.split(" ", 1)
+                # your time has unhelpful brackets around it
+                timenb = ttime[1:-1]
             else:
                 position = ""
                 timenb = ""
@@ -56,6 +58,9 @@ def multiscrape(username):
                 highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
 
                 highscores_writer.writerow([puzzle.string, position, timenb])
+
+            # I have learned that this is good practice
+            time.sleep(0.25)
 
         #run the scrape as many times as there are puzzles on that site
         for i in range(number0):
