@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import time
+import concurrent.futures
+
+MAX_THREADS = 30
 
 def multiscrape(username):
 
@@ -63,8 +66,9 @@ def multiscrape(username):
             time.sleep(0.25)
 
         #run the scrape as many times as there are puzzles on that site
-        for i in range(number0):
-            myscrape(i)
+        threads = min(MAX_THREADS, number0)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+            executor.map(myscrape, range(number0))
 
     # ok, so now it might still be prettier to have these in some kind of list, but this works
     numberscrape("shingoki")
@@ -91,5 +95,6 @@ def multiscrape(username):
     numberscrape("shikaku")
     numberscrape("nurikabe")
     numberscrape("dominosa")
+
 
 multiscrape ("russellan")
