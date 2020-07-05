@@ -1,3 +1,9 @@
+# Program output
+highscores.csv
+# Python stuff
 venv
+# PyCharm stuff
+.idea
+# MacOs stuff
 .DS_Store
 
