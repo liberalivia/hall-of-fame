@@ -7,7 +7,7 @@ import concurrent.futures
 # start a new csv and put in headers
 with open("highscores.csv", "w") as highscores:
     highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
-    highscores_writer.writerow(["puzzle", "SELF: position", "SELF: time", "SISTER: position", "SISTER:time"])
+    highscores_writer.writerow(["puzzle", "SELF: position", "SELF: time", "SISTER: position", "SISTER:time", "result"])
 
 
 def multiscrape(usernameA, usernameB):
@@ -82,6 +82,20 @@ def multiscrape(usernameA, usernameB):
             # scrape the name of the puzzle
             puzzle = docA.find(class_="on")
 
+            # now the all-important comparison
+            if " " in alltime1A and " " in alltime1B:
+                if positionA < positionB:
+                    result = "SELF"
+                else:
+                    result = "SISTER"
+            elif " " in alltime1A:
+                result = "SELF"
+            elif " " in alltime1B:
+                result = "SISTER"
+            else:
+                result = ""
+
+
             #and output! This time to a csv. "a" parameter lets me add to the file even though we're doing this over and over again
             with open("highscores.csv", "a") as highscores:
                 highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
@@ -89,9 +103,9 @@ def multiscrape(usernameA, usernameB):
                 #just fixing the fact that the naming is inconsistent on aquarium
                 if site == "aquarium":
                     aqpuzzle = "Aquarium " + puzzle.string
-                    highscores_writer.writerow([aqpuzzle, positionA, timenbA, positionB, timenbB])
+                    highscores_writer.writerow([aqpuzzle, positionA, timenbA, positionB, timenbB, result])
                 else:
-                    highscores_writer.writerow([puzzle.string, positionA, timenbA, positionB, timenbB])
+                    highscores_writer.writerow([puzzle.string, positionA, timenbA, positionB, timenbB, result])
 
             # I have learned that this is good practice
             time.sleep(0.25)
@@ -104,7 +118,7 @@ def multiscrape(usernameA, usernameB):
     # now I use threading here too. It doesn't seem to speed things up quite so much, not sure why.
     puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
     # comment out the line above and use the one below if you're testing to see if new features work as expected
-    #puzzles = ["masyu", "aquarium"]
+    # puzzles = ["masyu", "aquarium"]
     threads = len(puzzles)
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
             executor.map(numberscrape, puzzles)
