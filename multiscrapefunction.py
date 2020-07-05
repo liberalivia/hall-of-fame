@@ -4,8 +4,6 @@ import csv
 import time
 import concurrent.futures
 
-MAX_THREADS = 30
-
 def multiscrape(username):
 
     #this first nested function figures out how many versions there are of each puzzle
@@ -65,36 +63,16 @@ def multiscrape(username):
             # I have learned that this is good practice
             time.sleep(0.25)
 
-        #run the scrape as many times as there are puzzles on that site
-        threads = min(MAX_THREADS, number0)
+        #run the scrape as many times as there are puzzles on that site, now with threading
+        threads = number0
         with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
             executor.map(myscrape, range(number0))
 
-    # ok, so now it might still be prettier to have these in some kind of list, but this works
-    numberscrape("shingoki")
-    numberscrape("masyu")
-    numberscrape("stitches")
-    #annoyingly the site does not name the Aquarium puzzles
-    numberscrape("aquarium")
-    numberscrape("tapa")
-    numberscrape("star-battle")
-    numberscrape("kakurasu")
-    numberscrape("skyscrapers")
-    numberscrape("futoshiki")
-    numberscrape("words")
-    numberscrape("shakashaka")
-    numberscrape("kakuro")
-    numberscrape("jigsaw-sudoku")
-    numberscrape("killer-sudoku")
-    numberscrape("binairo")
-    numberscrape("nonograms")
-    numberscrape("loop")
-    numberscrape("sudoku")
-    numberscrape("light-up")
-    numberscrape("bridges")
-    numberscrape("shikaku")
-    numberscrape("nurikabe")
-    numberscrape("dominosa")
+    # now I use threading here too. It doesn't seem to speed things up quite so much, not sure why.
+    puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
+    threads = len(puzzles)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+            executor.map(numberscrape, puzzles)
 
 
 multiscrape ("russellan")
