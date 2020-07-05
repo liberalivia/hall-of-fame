@@ -4,6 +4,12 @@ import csv
 import time
 import concurrent.futures
 
+# start a new csv and put in headers
+with open("highscores.csv", "w") as highscores:
+    highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
+    highscores_writer.writerow(["puzzle", "position", "time"])
+
+
 def multiscrape(username):
 
     #this first nested function figures out how many versions there are of each puzzle
@@ -58,7 +64,12 @@ def multiscrape(username):
             with open("highscores.csv", "a") as highscores:
                 highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
 
-                highscores_writer.writerow([puzzle.string, position, timenb])
+                #just fixing the fact that the naming is inconsistent on aquarium
+                if site == "aquarium":
+                    aqpuzzle = "Aquarium " + puzzle.string
+                    highscores_writer.writerow([aqpuzzle, position, timenb])
+                else:
+                    highscores_writer.writerow([puzzle.string, position, timenb])
 
             # I have learned that this is good practice
             time.sleep(0.25)
@@ -69,7 +80,9 @@ def multiscrape(username):
             executor.map(myscrape, range(number0))
 
     # now I use threading here too. It doesn't seem to speed things up quite so much, not sure why.
-    puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
+    #puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
+    # comment out the line above and use the one below if you're testing to see if new features work as expected
+    puzzles = ["masyu", "aquarium"]
     threads = len(puzzles)
     with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
             executor.map(numberscrape, puzzles)
