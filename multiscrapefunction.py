@@ -5,13 +5,15 @@ import time
 import concurrent.futures
 import sys
 
-helptext = "This script finds puzzle highscores. Enter up to two usernames in the form 'multiscrapefunction.py username1 username2', or run multiscrapefunction.py without arguments and it will prompt you for two usernames. If you only want to find the scores for one username press return when asked for the second username."
+helptext = "This script finds puzzle highscores and outputs them as highscores.csv. Enter up to two usernames in the form 'multiscrapefunction.py username1 username2', or run multiscrapefunction.py without arguments and it will prompt you for two usernames. If you only want to find the scores for one username press return when asked for the second username."
 
-# defining some things
-
+# defining the puzzles we want
 puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
 # comment out the line above and use the one below if you're testing to see if new features work as expected
 # puzzles = ["masyu", "aquarium"]
+
+# trying to be ethical
+headers = {'User-Agent': 'This is a web-scraping agent I wrote to learn Python. https://github.com/liberalivia, russellan@hotmail.com'}
 
 # a very bad way of taking the usernames from the command line.
 # I feel like I should be using argparse and including help messages and so on, but in some ways that makes things a lot more complicated?
@@ -50,7 +52,7 @@ def multiscrapesingle():
 
         #get the page
         url = "https://www.puzzle-"+site+".com/hall.php"
-        page0 = requests.get(url)
+        page0 = requests.get(url, headers = headers)
         doc0 = BeautifulSoup(page0.text, 'html.parser')
 
         #find what I want
@@ -70,7 +72,7 @@ def multiscrapesingle():
 
             # I've already got the url, but have to request it again with .post
             # send the data
-            responseA = requests.post(url, data=dataA)
+            responseA = requests.post(url, data=dataA, headers = headers)
             docA = BeautifulSoup(responseA.text, 'html.parser')
 
             # hah, apparently I didn't need to go down one level at a time, which makes sense
@@ -131,7 +133,7 @@ def multiscrapedouble():
 
         #get the page
         url = "https://www.puzzle-"+site+".com/hall.php"
-        page0 = requests.get(url)
+        page0 = requests.get(url, headers = headers)
         doc0 = BeautifulSoup(page0.text, 'html.parser')
 
         #find what I want
@@ -151,7 +153,7 @@ def multiscrapedouble():
 
             # I've already got the url, but have to request it again with .post
             # send the data
-            responseA = requests.post(url, data=dataA)
+            responseA = requests.post(url, data=dataA, headers = headers)
             docA = BeautifulSoup(responseA.text, 'html.parser')
 
             # hah, apparently I didn't need to go down one level at a time, which makes sense
@@ -180,7 +182,7 @@ def multiscrapedouble():
                 'hallsize' : size
             }
 
-            responseB = requests.post(url, data=dataB)
+            responseB = requests.post(url, data=dataB, headers = headers)
             docB = BeautifulSoup(responseB.text, 'html.parser')
 
             userdataB = docB.find_all("th")
