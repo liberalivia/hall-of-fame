@@ -7,11 +7,11 @@ import sys
 
 helptext = "This script finds puzzle highscores. Enter up to two usernames in the form 'multiscrapefunction.py username1 username2', or run multiscrapefunction.py without arguments and it will prompt you for two usernames. If you only want to find the scores for one username press return when asked for the second username."
 
-#defining some things
+# defining some things
 
-#puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
+puzzles = ["shingoki", "masyu", "stitches", "aquarium", "tapa", "star-battle", "kakurasu", "skyscrapers", "futoshiki", "words", "shakashaka", "kakuro", "jigsaw-sudoku", "killer-sudoku", "binairo", "nonograms", "loop", "sudoku", "light-up", "bridges", "shikake", "nurikabe", "dominosa"]
 # comment out the line above and use the one below if you're testing to see if new features work as expected
-puzzles = ["masyu", "aquarium"]
+# puzzles = ["masyu", "aquarium"]
 
 # a very bad way of taking the usernames from the command line.
 # I feel like I should be using argparse and including help messages and so on, but in some ways that makes things a lot more complicated?
