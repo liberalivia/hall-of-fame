@@ -4,13 +4,14 @@ import csv
 import time
 import concurrent.futures
 
-# start a new csv and put in headers
-with open("highscores.csv", "w") as highscores:
-    highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
-    highscores_writer.writerow(["puzzle", "SELF: position", "SELF: time", "SISTER: position", "SISTER:time", "result"])
-
 
 def multiscrape(usernameA, usernameB):
+
+    # start a new csv and put in headers
+    with open("highscores.csv", "w") as highscores:
+        highscores_writer = csv.writer(highscores, delimiter=",", quotechar="'", quoting=csv.QUOTE_MINIMAL)
+        highscores_writer.writerow(["puzzle", usernameA + ": position", usernameA + ": time", usernameB + ": position", usernameB +":time", "result"])
+
 
     #this first nested function figures out how many versions there are of each puzzle
     def numberscrape(site):
@@ -51,6 +52,8 @@ def multiscrape(usernameA, usernameB):
             # also I had an object called time which was going to cause problems later
             if " " in alltime1A:
                 positionA, ttimeA = alltime1A.split(" ", 1)
+                # for the comparison later, we need to make sure that python recognises your position as a number
+                intpositionA = int(positionA)
                 # your time has unhelpful brackets around it
                 timenbA = ttimeA[1:-1]
             else:
@@ -73,6 +76,7 @@ def multiscrape(usernameA, usernameB):
 
             if " " in alltime1B:
                 positionB, ttimeB = alltime1B.split(" ", 1)
+                intpositionB = int(positionB)
                 # your time has unhelpful brackets around it
                 timenbB = ttimeB[1:-1]
             else:
@@ -84,7 +88,7 @@ def multiscrape(usernameA, usernameB):
 
             # now the all-important comparison
             if " " in alltime1A and " " in alltime1B:
-                if positionA < positionB:
+                if intpositionA < intpositionB:
                     result = "SELF"
                 else:
                     result = "SISTER"
